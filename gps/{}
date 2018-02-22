@@ -1,0 +1,10 @@
+HTTP/1.1 419 unknown status
+Host: localhost:8000
+Date: Sat, 10 Feb 2018 11:37:46 +0000
+Connection: close
+X-Powered-By: PHP/7.1.13-1+ubuntu16.04.1+deb.sury.org+1
+Cache-Control: no-cache, private
+date: Sat, 10 Feb 2018 11:37:46 GMT
+Content-Type: text/html; charset=UTF-8
+Set-Cookie: laravel_session=eyJpdiI6IlNybEplend5akV4MnRmU3hcL3FYSnRRPT0iLCJ2YWx1ZSI6IlRLQ29PcGtxTzc5RDRYXC9xSzdBWkVzVktNS2pEVTc4WmUrMHBiK2RUdHBRVmVGS1hEOHpxZXhJNjZSUW00MEJIK0NLeGxMZDlFMHpNblBSZTUxeWJcL1E9PSIsIm1hYyI6IjY4NWI0Yjc5ZmNlMTRjYWExMDA5N2FhOTkzZGJkZjA5NzI1NjQ5YjMzZDUyMmY4ODRkMjE2OTYwMWFlYzYwOGUifQ%3D%3D; expires=Sat, 10-Feb-2018 13:37:46 GMT; Max-Age=7200; path=/; HttpOnly
+
