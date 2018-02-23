@@ -11,12 +11,10 @@
 
                 <div class="card-body">
                 
-					@foreach($sessions as $session)
+					@foreach($trucks as $truck)
                     <div class="form-group row mb-0">
                         <div class="col-md-6 offset-md-4">
-                            <a href="/truck/chooseTruck/{{ $truck->id }}">{{ $session->id }}</a>
-                            {{ $session->vehicle }}
-                            {{ $session->commands }}
+                            <a href="/truck/chooseTruck/{{ $truck->id }}">{{ $truck->id }}</a>
                         </div>
                     </div>
 					@endforeach

@@ -12,7 +12,7 @@ class Item extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'conditioning', 'amountPerPackaging', 'supplierId', 'cost'
+        'name', 'conditioning', 'amountPerPackaging',
     ];
     
 }

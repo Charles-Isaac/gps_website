@@ -27,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/truck/pickSession';
+    protected $redirectTo = '/truck/home';
 
     /**
      * Create a new controller instance.

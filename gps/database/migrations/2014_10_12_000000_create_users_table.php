@@ -15,11 +15,11 @@ class CreateUsersTable extends Migration
     {
         Schema::create('drivers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 64);
-            $table->string('lastName', 64);
+            $table->string('name');
+            $table->string('lastName');
             $table->tinyInteger('licence');
             $table->boolean('isAdmin')->default(0);
-            $table->string('email', 128)->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

@@ -18,7 +18,6 @@ class CreateVehicleItemsTable extends Migration
             $table->integer('vehicleId')->unsigned();
             $table->integer('itemId')->unsigned();
             $table->integer('amount');
-            $table->integer('trueAmount');
             $table->primary(['vehicleId', 'itemId']);
             $table->foreign('vehicleId')->references('id')->on('vehicles');
             $table->foreign('itemId')->references('id')->on('items');

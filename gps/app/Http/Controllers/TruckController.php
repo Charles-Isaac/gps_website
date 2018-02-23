@@ -15,95 +15,16 @@ use App\APIs\Google\Point;
 class TruckController extends Controller
 {
     /*
-        Route::prefix('truck')->group(function() {
-        Route::middleware('mustHaveSession')->group(function() {
-            Route::post('coords', 'TruckController@sendCoords');
-            Route::post('reached', 'TruckController@reachedDest');
-            Route::get('destinations', 'TruckController@getDestinations');
-            Route::get('inventory', 'TruckController@getInventory');
-            Route::get('home', 'TruckController@viewSession');
-        });
-        Route::get('pickSession', 'TruckController@chooseSession')->middleware('mustHaveNoSession')->name('chooseTruck');
-        Route::get('pickSession/{id}', 'TruckController@choseSession')->middleware('mustHaveNoSession')->name('chooseTruck');
-    });
+    Route::post('coords', 'TruckController@sendCoords');
+    Route::post('reached', 'TruckController@reachedDest');
+    Route::get('destinations', 'TruckController@getDestinations');
+    Route::get('inventory', 'TruckController@getInventory');
+    Route::get('home', 'TruckController@getHome');
+    Route::get('chooseTruck/{id}', 'TruckController@chooseTruck');
     */
     
-    private function selectSuitableSessionsForDriver($driverId) {
-        return DB::select(
-            "select sessionId as id, name as vehicleName, vehicleId, count(commands.id) from commands ".
-            "join sessions on sessions.id=sessionid join vehicles on vehicles.id=vehicleid ".
-            "where vehicles.licence<=(select licence from drivers where id=1) ".
-            "and sessions.start is null group by sessionId, name, vehicleId;"
-        );
-        /*return DB::select(
-            "Select sessionId, name, vehicleId, COUNT(commands.ID) From commands ".
-            "Join sessions On sessions.id = sessionID ".
-            "Join vehicles On vehicles.id = vehicleId ".
-            "Group By sessionID, name, vehicleId ".
-            "Having SessionStatus(sessionId) = 0 ".
-            "And CanBeCombined(?, vehicleId) = 0; ", [$driverId]
-        );
-        */
-    }
-    
-    private function selectSessionClients($sessionId) {
-        return DB::select(
-            'select name, lat, lng from clients '.
-            'join commands on clientId=clients.id where sessionId=?', [$sessionId]
-        );
-    }
-    
-    public function chooseSession(Request $req) 
-    {
-        // Get all available sessions
-        $availableSessions = $this->selectSuitableSessionsForDriver(Auth::user()->id);
-        return view('truck.pickSession', ['sessions' => $availableSessions]);
-    }
-    
-    public function getSessionPath(Request $req)
-    {
-        $data = $req->validate([
-            'id' => 'required|exists:sessions,id'
-        ]);
-        $id = $data['id'];
-        return json_encode($this->selectSessionClients($id));
-    }
-    
-    public function choseSession(Request $req, $id)
-    {
-        $intId = (int)$id;
+    public function getDestinations(Request $req) {
         
-        if (!(isset($id) && $intId > 0)) {
-            return Response::json(["Invalid vehicle id : $intId"], 403);
-        }
-        
-        // Check that the vehicle ID is valid
-        $isValid = DB::select(
-            "select ".
-                "if((select count(v.id) from vehicles v join sessions s on s.vehicleId=v.id where s.end is null and v.id=:id)=0 ".
-                "and (select count(ve.id) from vehicles ve where ve.id=:id)=1, 1, 0) as isValid;",
-            ['id' => $intId]);
-        
-        if (!isset($isValid[0]) || $isValid[0]->isValid != 1) {
-            return Response::json(["The chosen vehicle either does not exist or is currently in use. $intId" . json_encode($isValid)], 403);
-        }
-        
-        $driverId = Auth::user()->id;
-        $vehicleId = $id;
-        $date = date('Y-m-d h:i:s');
-        
-        // Make the session object in the database
-        $dat = [
-            'driverId' => $driverId,
-            'vehicleId' => $vehicleId,
-            'start' => $date,
-        ];
-        $sessionId = Session::create($dat)->id;
-        $req->session()->put('sessionId', $sessionId);
-        
-        
-        // Make sure the chosen truck is available
-        return redirect('truck/session');
     }
     
     public function getInventory(Request $req) 
@@ -140,6 +61,53 @@ class TruckController extends Controller
         SessionPos::create($dat);
         
         return Response::json($dat, 201);
+    }
+    
+    public function chooseTruck(Request $req, $id) 
+    {
+        $intId = (int)$id;
+        
+        if (!(isset($id) && $intId > 0)) {
+            return Response::json(["Invalid vehicle id : $intId"], 403);
+        }
+        
+        // Check that the vehicle ID is valid
+        $isValid = DB::select(
+            "select if((select count(v.id) from vehicles v join sessions s on s.vehicleId=v.id where s.end is null and v.id=$intId)=0 and (select count(ve.id) from vehicles ve where ve.id=$intId)=1, 1, 0) as isValid;"
+        );
+        
+        if (!isset($isValid[0]) || $isValid[0]->isValid != 1) {
+            return Response::json(["The chosen vehicle either does not exist or is currently in use. $intId" . json_encode($isValid)], 403);
+        }
+        
+        $driverId = Auth::user()->id;
+        $vehicleId = $id;
+        $date = date('Y-m-d h:i:s');
+        
+        // Make the session object in the database
+        $dat = [
+            'driverId' => $driverId,
+            'vehicleId' => $vehicleId,
+            'start' => $date,
+        ];
+        $sessionId = Session::create($dat)->id;
+        $req->session()->put('sessionId', $sessionId);
+        
+        
+        // Make sure the chosen truck is available
+        return redirect('truck/session');
+    }
+    
+    public function getHome(Request $req) 
+    {
+        // Get all available trucks
+        $availableTrucks = DB::select(
+            'select vi.* from vehicles vi where vi.id not in (select v.id from vehicles v join sessions s on s.vehicleId=v.id where s.end is null);'
+        );
+        
+        
+        
+        return view('truck.home', ['trucks' => $availableTrucks]);
     }
     
     public function viewSession(Request $req) 

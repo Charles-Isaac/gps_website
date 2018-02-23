@@ -12,6 +12,6 @@ class Vehicle extends Model
      * @var array
      */
     protected $fillable = [
-        'licence', 'conditioning', 'capacity', 'usedCapacity', 'name'
+        'licence', 'conditioning', 'capacity', 'usedCapacity',
     ];
 }

@@ -15,12 +15,9 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 128)->unique();
-            $table->integer('supplierId')->unsigned();
-            $table->double('cost');
+            $table->string('name')->unique();
             $table->boolean('conditioning');
             $table->integer('amountPerPackaging');
-            $table->foreign('supplierId')->references('id')->on('suppliers');
             $table->timestamps();
         });
     }

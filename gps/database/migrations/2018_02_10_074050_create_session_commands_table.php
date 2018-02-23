@@ -1,10 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class SessionMessages extends Migration
+class CreateSessionCommandsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +14,13 @@ class SessionMessages extends Migration
      */
     public function up()
     {
-        Schema::create('notifies', function (Blueprint $table) {
+        Schema::create('session_commands', function (Blueprint $table) {
             $table->integer('sessionId')->unsigned();
-            $table->primary('sessionId');
+            $table->integer('commandId')->unsigned();
+            $table->primary(['sessionId', 'commandId']);
             $table->foreign('sessionId')->references('id')->on('sessions');
+            $table->foreign('commandId')->references('id')->on('commands');
+            
         });
     }
 
@@ -27,8 +31,6 @@ class SessionMessages extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notify');
-        Schema::dropIfExists('notifies');
-        Schema::dropIfExists('session_messages');
+        Schema::dropIfExists('session_commands');
     }
 }

@@ -18,6 +18,6 @@ class MustHaveSession
         if ($request->session()->has('sessionId')) {
             return $next($request);
         }
-        return redirect('/truck/pickSession');
+        return redirect('/truck/home');
     }
 }

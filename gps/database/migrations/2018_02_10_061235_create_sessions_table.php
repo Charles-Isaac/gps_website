@@ -15,7 +15,7 @@ class CreateSessionsTable extends Migration
     {
         Schema::create('sessions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('driverId')->unsigned()->nullable();
+            $table->integer('driverId')->unsigned();
             $table->integer('vehicleId')->unsigned();
             $table->timestamp('start')->nullable();
             $table->timestamp('end')->nullable();

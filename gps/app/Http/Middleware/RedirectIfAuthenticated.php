@@ -21,7 +21,7 @@ class RedirectIfAuthenticated
             if (Auth::user()->isAdmin) {
                 return redirect('/controller/home');
             } else {
-                return redirect('/truck/pickSession');
+                return redirect('/truck/home');
             }
         }
 

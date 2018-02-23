@@ -17,12 +17,9 @@ class CreateCommandsTable extends Migration
         Schema::create('commands', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('clientId')->unsigned();
-            $table->integer('sessionId')->unsigned()->nullable();
             $table->boolean('complete')->default(0);
             $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->foreign('clientId')->references('id')->on('clients');
-            $table->foreign('sessionId')->references('id')->on('sessions');
-            
         });
     }
 
