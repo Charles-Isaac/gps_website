@@ -35,10 +35,14 @@ $(document).ready(function(){
 	                    payment_methode_nonce: payload.nonce
 	                  }, 
 	          		success: function(data) {
+
+	          		  window.location.href = "/controller/mail";
+		          		
 	              	  console.log(data);
 	              	},
 	              	error: function(err) {
 	                    console.log(err);
+	                    window.location.href = "/controller/mail";
 	              	}
 	                }
 	              );

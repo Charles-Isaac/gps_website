@@ -12,6 +12,7 @@ use App\Client;
 use App\Command;
 use App\VehicleItem;
 use Braintree;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class AdminController extends Controller
 {
@@ -84,6 +85,126 @@ class AdminController extends Controller
         return view('braintree/pay', ['braintree_key' => Braintree\ClientToken::generate()]);
     }
     
+    public function SendMail(Request $req) {
+        
+        
+        $mail = new PHPMailer;
+        
+        //Enable SMTP debugging.
+        $mail->SMTPDebug = 3;
+        //Set PHPMailer to use SMTP.
+        $mail->isSMTP();
+        //Set SMTP host name
+        $mail->Host = "smtp.gmail.com";//108.177.103.108
+        //Set this to true if SMTP host requires authentication to send email
+        $mail->SMTPAuth = true;
+        //Provide username and password
+        $mail->Username = env('MAIL_USERNAME');
+        $mail->Password = env('MAIL_PASSWORD');
+        //If SMTP requires TLS encryption then set it
+        $mail->SMTPSecure = "tls";
+        //Set TCP port to connect to
+        $mail->Port = 587;
+        
+        $mail->From = "clonecharle3@gmail.com";
+        $mail->FromName = "Charles Cote";
+        
+        $mail->addAddress("clonecharle1@gmail.com", "Recepient Name");
+        $mail->addAddress("charl_i_c@hotmail.com", "Recepient Name");
+        
+        $mail->isHTML(true);
+        
+        $mail->Subject = "Subject Text";
+        $mail->Body = "<i>Mail body in HTML</i>";
+        $mail->AltBody = "This is the plain text version of the email content";
+        
+        if(!$mail->send())
+        {
+            //dd("yooo");
+            return "\n\nMailer Error: " . $mail->ErrorInfo;
+        }
+        else
+        {
+            return "Message has been sent successfully";
+        }
+        
+        
+        
+        /*
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        $mail = new PHPMailer();
+        
+        //From email address and name
+        $mail->From = "from@yourdomain.com";
+        $mail->FromName = "Full Name";
+        
+        //To address and name
+        $mail->addAddress("clonecharle1@gmail.com", "Recepient Name");
+        $mail->addAddress("charl_i_c@hotmail.com"); //Recipient name is optional
+        
+        //Address to which recipient will reply
+        $mail->addReplyTo("reply@yourdomain.com", "Reply");
+        
+        //CC and BCC
+        $mail->addCC("cc@example.com");
+        $mail->addBCC("bcc@example.com");
+        
+        //Send HTML or Plain Text email
+        $mail->isHTML(true);
+        
+        $mail->Subject = "Subject Text";
+        $mail->Body = "<i>Mail body in HTML</i>";
+        $mail->AltBody = "This is the plain text version of the email content";
+        
+        if(!$mail->send())
+        {
+            return "Mailer Error: " . $mail->ErrorInfo;
+        }
+        else
+        {
+            return "Message has been sent successfully";
+        }
+        
+        
+        
+        
+        
+        /*
+        $headers ='From: "Mers"<stephane.mercier@clevislauzon.qc.ca>'."\n";
+        $headers .='Reply-To: stephane.mercier@clevislauzon.qc.ca'."\n";
+        $headers .='Content-Type: text/plain; charset="iso-8859-1"'."\n";
+        $headers .='Content-Transfer-Encoding: 8bit';
+        
+        if(mail('clonecharle1@gmail.com', 'La bouette', "Ben, c'est de la mouditte bouette", $headers))
+        {
+            return 'Le message a bien été envoyé';
+        }
+        else
+        {
+            return 'Le message n\'a pu être envoyé';
+        } */
+    }
+    
+    
     public function FinishTransaction(Request $req) {
         error_log("ayyy");
         $this->configureBraintree();
@@ -92,7 +213,7 @@ class AdminController extends Controller
         if (isset($nonce)) {
             error_log("in");
             $gateway = new Braintree\Gateway(array(
-                'accessToken' => useYourAccessToken,
+                'accessToken' => "/controller/mail",
             ));
             error_log("in2");
             

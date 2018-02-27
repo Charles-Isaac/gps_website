@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function() {
     Route::middleware('isController')->group(function() {
         Route::prefix('controller')->group(function() {
+            Route::get('mail', 'AdminController@SendMail');
             Route::post('item', 'AdminController@MakeItem');
             Route::post('truck', 'AdminController@MakeTruck');
             Route::post('client', 'AdminController@MakeClient');
